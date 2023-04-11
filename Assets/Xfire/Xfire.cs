@@ -1,16 +1,19 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
+using System.IO;
 
-public class AirDropShare : MonoBehaviour
+public class Xfire : MonoBehaviour
 {
-    void Awake() {
+    void Awake()
+    {
         Debug.Log("さて起動");
-        var documentPath = Application.persistentDataPath;
-        var b = new byte[]{1,2,3};
-
-        var path = "something.txt";
-        // 保存する。
-        
+        var b = new byte[] { 1, 2, 3 };
+        var path = Path.Combine(Application.persistentDataPath, "data.txt");
+        using (var sw = new StreamWriter(path))
+        {
+            sw.Write(b);
+        }
+        Debug.Log("path:" + path);
         ShareFile(path);
     }
 
