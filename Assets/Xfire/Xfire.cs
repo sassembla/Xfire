@@ -12,6 +12,23 @@ public static class Xfire
     private static extern void _shareFile(string filePath);
 #endif
 
+    public static void SaveShareFile(byte[] buffer)
+    {
+        if (!Directory.Exists(Path.Combine(Application.persistentDataPath, XFIRE_DIR_NAME)))
+        {
+            Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, XFIRE_DIR_NAME));
+        }
+
+        var path = Path.Combine(Application.persistentDataPath, XFIRE_DIR_NAME, "data.txt");// 毎回同じファイルを書き潰す
+        File.WriteAllBytes(path, buffer);
+    }
+
+    public static void ShareSavedFile()
+    {
+        var path = Path.Combine(Application.persistentDataPath, XFIRE_DIR_NAME, "data.txt");// 毎回同じファイルを書き潰す
+        _shareFile(path);
+    }
+
     public static void ShareFile(byte[] buffer)
     {
 #if UNITY_IOS
