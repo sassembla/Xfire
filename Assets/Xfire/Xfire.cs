@@ -1,31 +1,35 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 using System.IO;
+using System;
 
-public class Xfire : MonoBehaviour
+public static class Xfire
 {
-    void Awake()
-    {
-        Debug.Log("さて起動");
-        var b = new byte[] { 1, 2, 3 };
-        var path = Path.Combine(Application.persistentDataPath, "data.txt");
-        using (var sw = new StreamWriter(path))
-        {
-            sw.Write(b);
-        }
-        Debug.Log("path:" + path);
-        ShareFile(path);
-    }
+    private const string XFIRE_DIR_NAME = "xfire";
 
 #if UNITY_IOS
     [DllImport("__Internal")]
     private static extern void _shareFile(string filePath);
 #endif
 
-    public void ShareFile(string filePath)
+    public static void ShareFile(byte[] buffer)
     {
 #if UNITY_IOS
-        _shareFile(filePath);
+        try
+        {
+            if (!Directory.Exists(Path.Combine(Application.persistentDataPath, XFIRE_DIR_NAME)))
+            {
+                Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, XFIRE_DIR_NAME));
+            }
+
+            var path = Path.Combine(Application.persistentDataPath, XFIRE_DIR_NAME, "data.txt");// 毎回同じファイルを書き潰す
+            File.WriteAllBytes(path, buffer);
+            _shareFile(path);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("failed to send file. e:" + e);
+        }
 #endif
     }
 }

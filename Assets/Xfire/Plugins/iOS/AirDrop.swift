@@ -8,7 +8,7 @@ import Foundation
             fatalError("Unable to access Documents directory")
         }
         
-        let fileName = "data.txt"
+        let fileName = "xfire/data.txt"
         let fileURL = documentsURL.appendingPathComponent(fileName)
 
         let activityViewController = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
